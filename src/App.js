@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { createContext, useState } from "react";
+import { DashboardRouter } from "routes/dashboard/DashboardRouter";
+import { LoginRouter } from "routes/login/LoginRouter";
+import "./main.css";
 
-function App() {
+export const TokenContext = createContext({
+  token: localStorage.getItem("token") || "",
+  setToken: (callback = (prev = "") => {}) => {},
+});
+
+export const App = () => {
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TokenContext.Provider value={{ token, setToken }}>
+      <div className="div_main">
+        {token ? <DashboardRouter /> : <LoginRouter />}
+      </div>
+    </TokenContext.Provider>
   );
-}
-
-export default App;
+};
